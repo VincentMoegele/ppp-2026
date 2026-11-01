@@ -86,4 +86,4 @@ def test_parse_transcript_empty_list():
 
 def test_directory_to_delete_enough_space():
     sizes = directory_sizes(EXAMPLE_ENTRIES)
-    assert directory_to_delete(sizes, 500000000, 10) == None
+    assert directory_to_delete(sizes, 500000000, 10) is None
