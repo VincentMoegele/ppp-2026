@@ -27,55 +27,26 @@ EXAMPLE = [
 
 # ---------------------------------------------------------------- Part 1 (in class)
 
-
 def parse_transcript(lines):
-    """Return a list of (path, size) pairs, one per file listed in the transcript.
-
-    lines is a list of strings like EXAMPLE. Paths are full paths, e.g. "/photos/trip.jpg",
-    in the order the files appear in the transcript.
-    """
-
     current_path = ""
     ReturnList = []
 
-    ints = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-
     for element in lines:
-        if element[0] == "$":
-            if element[2:4] == "cd" and element[5:7] != "..":
-                if element[5] != "/":
-                    current_path += element[5:] + "/"
-                else:
-                    current_path = "/"
-
-            elif element[5:7] == "..":
+        if element.startswith("$ cd"):
+            target = element[5:]
+            if target == "/":
+                current_path = "/"
+            elif target == "..":
                 current_path = current_path.rstrip("/").rsplit("/", 1)[0] + "/"
+            else:
+                current_path += target + "/"
 
-                # entferne rechtes / mit .rstrip
-                # teile bei dem nächsten / von rechts mit rsplit
-                # wähle das erste Element, den verbleibenden Pfad mit [0]
-
-            elif element[2:4] == "ls":
-                pass
-
-        elif element[0:3] == "dir":
-            pass
+        elif element.startswith("$") or element.startswith("dir"):
+            continue 
 
         else:
-            pos = 0
-            size = ""
-
-            for char in element:
-                if char in ints:
-                    size = size + char
-                    pos += 1
-                else:
-                    break
-
-            size = int(size)
-            name = element[pos + 1 :]
-
-            ReturnList.append((current_path + name, size))
+            size, name = element.split(" ", 1)
+            ReturnList.append((current_path + name, int(size)))
 
     return ReturnList
 
@@ -100,15 +71,15 @@ def directory_sizes(entries):
         dirPath = ""
 
         for dir in Stack:
-            if dir == "":  # Urpsrung / wird Abgeschnitten
+            if dir == "": 
                 returnDict["/"] += Size
             else:
-                dirPath += "/" + dir  # Path wird tiefer verfolgt
+                dirPath += "/" + dir  
 
                 if dirPath not in returnDict:
-                    returnDict[dirPath] = Size  # neu angelegt falls nicht enthalten
+                    returnDict[dirPath] = Size 
                 else:
-                    returnDict[dirPath] += Size  # erhöht falls enthalten
+                    returnDict[dirPath] += Size  
 
     return returnDict
 
@@ -159,9 +130,8 @@ def delete_directory(sizes, path):
     If path is not in sizes return the unchanged sizes, as path is not in it, it is automatically removed.
     """
 
-    newDir = copy.deepcopy(sizes)  # deepcopy shallow copy will still change sizes
-
-    prefix = path.rstrip("/") + "/"  # Einheitlichkeit für paths mit / und ohne / am ende
+    newDir = copy.deepcopy(sizes) 
+    prefix = path.rstrip("/") + "/"  
 
     contained = False
 
@@ -173,16 +143,16 @@ def delete_directory(sizes, path):
     if not contained:
         return newDir
 
-    parent = path.rstrip("/").rsplit("/", 1)[0] or "/"  # Direktes parent dir
+    parent = path.rstrip("/").rsplit("/", 1)[0] or "/"   
 
     while True:
         if parent in newDir:
-            newDir[parent] -= sizes[path]  # Parent wird in größe reduziert
+            newDir[parent] -= sizes[path]  
 
         if parent == "/":
             break
 
-        parent = parent.rsplit("/", 1)[0] or "/"  # Schritt nach außen
+        parent = parent.rsplit("/", 1)[0] or "/"  
 
     return newDir
 

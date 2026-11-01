@@ -78,3 +78,10 @@ def test_delete_parent_directory():
         "/": 3100,
         "/music": 3000,
     }
+
+def test_parse_transcript_empty_list():
+    assert parse_transcript([]) == []
+
+def test_directory_to_delete_enough_space():
+    sizes = directory_sizes(EXAMPLE_ENTRIES)
+    assert directory_to_delete(sizes, 500000000,10) == None
