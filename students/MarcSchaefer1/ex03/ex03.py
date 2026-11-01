@@ -27,6 +27,7 @@ EXAMPLE = [
 
 # ---------------------------------------------------------------- Part 1 (in class)
 
+
 def parse_transcript(lines):
     current_path = ""
     ReturnList = []
@@ -42,7 +43,7 @@ def parse_transcript(lines):
                 current_path += target + "/"
 
         elif element.startswith("$") or element.startswith("dir"):
-            continue 
+            continue
 
         else:
             size, name = element.split(" ", 1)
@@ -71,15 +72,15 @@ def directory_sizes(entries):
         dirPath = ""
 
         for dir in Stack:
-            if dir == "": 
+            if dir == "":
                 returnDict["/"] += Size
             else:
-                dirPath += "/" + dir  
+                dirPath += "/" + dir
 
                 if dirPath not in returnDict:
-                    returnDict[dirPath] = Size 
+                    returnDict[dirPath] = Size
                 else:
-                    returnDict[dirPath] += Size  
+                    returnDict[dirPath] += Size
 
     return returnDict
 
@@ -130,8 +131,8 @@ def delete_directory(sizes, path):
     If path is not in sizes return the unchanged sizes, as path is not in it, it is automatically removed.
     """
 
-    newDir = copy.deepcopy(sizes) 
-    prefix = path.rstrip("/") + "/"  
+    newDir = copy.deepcopy(sizes)
+    prefix = path.rstrip("/") + "/"
 
     contained = False
 
@@ -143,16 +144,16 @@ def delete_directory(sizes, path):
     if not contained:
         return newDir
 
-    parent = path.rstrip("/").rsplit("/", 1)[0] or "/"   
+    parent = path.rstrip("/").rsplit("/", 1)[0] or "/"
 
     while True:
         if parent in newDir:
-            newDir[parent] -= sizes[path]  
+            newDir[parent] -= sizes[path]
 
         if parent == "/":
             break
 
-        parent = parent.rsplit("/", 1)[0] or "/"  
+        parent = parent.rsplit("/", 1)[0] or "/"
 
     return newDir
 
