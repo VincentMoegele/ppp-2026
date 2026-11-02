@@ -41,6 +41,7 @@ def change_directory(current_dir, target):
 
 
 def build_path(current_dir, filename):
+    """Build filepath e.g. /photos/selfie.jpg"""
     if current_dir == "/":
         return "/" + filename  # file in / directory
     return current_dir + "/" + filename  # file in subdirectory
@@ -68,7 +69,7 @@ def is_parent(directory, path):
     return directory == "/" or path.startswith(directory + "/")
 
 
-def parse_transcript(lines):
+def parse_transcript_old(lines):
     """Return a list of (path, size) pairs, one per file listed in the transcript.
 
     lines is a list of strings like EXAMPLE. Paths are full paths, e.g. "/photos/trip.jpg",
@@ -82,6 +83,27 @@ def parse_transcript(lines):
         elif line[0].isdigit():  # ls command shows files starting with size
             size, filename = line.split(" ")
             files.append((build_path(current_dir, filename), int(size)))
+    return files
+
+
+def parse_transcript(lines):
+    """Return a list of (path, size) pairs, one per file listed in the transcript.
+
+    lines is a list of strings like EXAMPLE. Paths are full paths, e.g. "/photos/trip.jpg",
+    in the order the files appear in the transcript.
+    """
+    files = []
+    current_dir = "/"
+    for line in lines:  # for every command
+        if line == "":
+            continue
+        elif line.startswith("$ cd "):
+            current_dir = change_directory(current_dir, line[5:])
+        elif line[0].isdigit():  # ls command shows files starting with size
+            size, filename = line.split(" ", 1)
+            files.append((build_path(current_dir, filename), int(size)))
+        else:
+            continue
     return files
 
 
@@ -157,3 +179,4 @@ if __name__ == "__main__":
     print("4:", small_directories_total(delete_directory(sizes, "/home/backup")))
     print("2 again:", small_directories_total(sizes))
     print(parse_transcript(EXAMPLE))
+    print(parse_transcript(["$ cd /", "", "$ ls", "dir photos", "100 notes.txt"]))

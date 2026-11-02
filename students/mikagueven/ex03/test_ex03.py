@@ -1,3 +1,4 @@
+import pytest
 from ex03 import (
     EXAMPLE,
     delete_directory,
@@ -5,6 +6,7 @@ from ex03 import (
     directory_to_delete,
     parse_transcript,
     small_directories_total,
+    parse_transcript_old,
 )
 
 EXAMPLE_ENTRIES = [
@@ -72,3 +74,19 @@ def test_delete_directory_sizes():
 def test_small_directories_total_0():
     sizes = directory_sizes(EXAMPLE_ENTRIES)
     assert small_directories_total(sizes, limit=1) == 0
+
+
+def test_empty_transcript():
+    with pytest.raises(IndexError):
+        assert parse_transcript_old(["$ cd /", "", "$ ls", "dir photos", "100 notes.txt"])
+
+
+def test_empty_transcript_new():
+    assert parse_transcript(["$ cd /", "", "$ ls", "dir photos", "100 notes.txt"]) == [
+        ("/notes.txt", 100)
+    ]
+
+
+def test_filename_with_spaces():
+    lines = ["1000 picture from my holiday.png"]
+    assert parse_transcript(lines) == [("/picture from my holiday.png", 1000)]
