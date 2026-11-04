@@ -67,7 +67,7 @@ def test_delete_directory():
         "/photos/summer": 4000,
         "/music": 3000,
     }
-    sizes = directory_sizes(EXAMPLE_ENTRIES) # delete root now
+    sizes = directory_sizes(EXAMPLE_ENTRIES)  # delete root now
     assert delete_directory(sizes, "/") == {}
 
 
