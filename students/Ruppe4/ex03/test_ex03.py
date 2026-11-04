@@ -1,3 +1,4 @@
+import pytest
 from ex03 import (
     EXAMPLE,
     delete_directory,
@@ -65,6 +66,11 @@ def test_delete_directory():
 def test_directory_to_delete_enough_space_free():
     sizes = directory_sizes(EXAMPLE_ENTRIES)
     assert directory_to_delete(sizes, disk_size=20000, needed_free=5000) is None
+
+def test_directory_to_delete_no_directory_large_enough():
+    sizes = directory_sizes(EXAMPLE_ENTRIES)
+    with pytest.raises(ValueError):
+        directory_to_delete(sizes, disk_size=20000, needed_free=30000)
 
 
 def test_small_directories_total_0():
