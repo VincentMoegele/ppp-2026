@@ -108,7 +108,15 @@ def delete_directory(sizes, path):
 
     If `path` is not a directory in sizes, returns a copy of `sizes` unchanged.
     """
-    sizes_copy = {k: v for k, v in sizes.items() if k != path}
+
+    prefix = path if path.endswith("/") else path + "/"
+
+    sizes_copy = {
+        current_path: size
+        for current_path, size in sizes.items()
+        if current_path != path and not current_path.startswith(prefix)
+    }
+
     if sizes_copy == sizes:
         return sizes_copy
 
