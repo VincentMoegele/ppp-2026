@@ -100,7 +100,9 @@ def directory_to_delete(sizes, disk_size=50000000, needed_free=20000000):
         return None
     missing = needed_free - free
     candidates = [s for s in sizes.values() if s >= missing]
-    return min(candidates) if candidates else None
+    if not candidates:
+        raise ValueError(f"no directory is large enough to free {missing} bytes")
+    return min(candidates)
 
 
 def delete_directory(sizes, path):
