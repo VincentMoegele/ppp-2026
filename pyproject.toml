@@ -41,4 +41,4 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 # lecture notebooks show some errors on purpose, e.g. a NameError for a "predict" question
-"lectures/*.ipynb" = ["F821"]
+"lectures/*.ipynb" = ["F821", "F823", "F841"]
